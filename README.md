@@ -17,7 +17,7 @@ simply get rid of all the bracket:
 Now, our input is a 209 X 12288 matrix, correspondingly, our input layer should have 12288 neurons.
 ## **Forward Propagation**  
 Any kinds of backpropagation neural networks start from forward propagation. Let's try to implement a neural network with 2 hidden layers.  
-[image_forward]  
+![image](http://github.com/YIHE1992/Back-Propagation-N.N.-/raw/master/forward.jpg)  
 In the above diagram, the forward propagation process is very intuitive. Let's use the propagation process between input layer and hidden
 layer 1 as an example, then every step will be the same, all the way to the output layer.  
 <a href="https://www.codecogs.com/eqnedit.php?latex=a_{H_{1}}&space;=&space;W_{input\rightarrow&space;H_{1}}&space;\cdot&space;a_{input}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?a_{H_{1}}&space;=&space;W_{input\rightarrow&space;H_{1}}&space;\cdot&space;a_{input}" title="a_{H_{1}} = W_{input\rightarrow H_{1}} \cdot a_{H_{1}}" /></a> (we don't add the bias here for continent)  
