@@ -31,23 +31,20 @@ as bad as random guess the label, because the weights between layers are randoml
 Before we start the backward propagation to modify the non-sense weights to make-sense weights, we would like to know, how much we are currently
 far away from making the prefect prediction, with 100% accuracy. 
 <a href="https://www.codecogs.com/eqnedit.php?latex=Error&space;=&space;\frac{1}{2}&space;\sum&space;(label&space;-&space;h_{output})^{2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Error&space;=&space;\frac{1}{2}&space;\sum&space;(label&space;-&space;h_{output})^{2}" title="Error = \frac{1}{2} \sum (label - h_{output})^{2}" /></a>  
-_(Observing the above equation (cost function), a question come to my mind: why 1/2 of the L2 distance?_  
+_(When observing the above equation (cost function), a question come to my mind: why 1/2 of the L2 distance?_  
 _The answer is for beauty.)_  
 ## **Gradient Descend**  
 Now, let's stand one step back to speculate what we have on hand now. We have our input, a big matrix. We have the operation (basically just
 linear transformation and activation function, nothing else) between layers. We have our prediction error. In this case, can we regard our
 whole forward propagation process as this:  
-<a href="https://www.codecogs.com/eqnedit.php?latex=Error&space;=&space;f_{input\rightarrow&space;H_{1}}(f_{H_{1}\rightarrow&space;H_{2}}(f_{H_{2}\rightarrow&space;output}&space;(Input)))" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Error&space;=&space;f_{input\rightarrow&space;H_{1}}(f_{H_{1}\rightarrow&space;H_{2}}(f_{H_{2}\rightarrow&space;output}&space;(Input)))" title="Error = f_{input\rightarrow H_{1}}(f_{H_{1}\rightarrow H_{2}}(f_{H_{2}\rightarrow output} (Input)))" /></a>  
+<a href="https://www.codecogs.com/eqnedit.php?latex=Error&space;=&space;f_{H_{2}\rightarrow&space;output}(f_{H_{1}\rightarrow&space;H_{2}}(f_{input\rightarrow&space;H_{1}}(Input)))" target="_blank"><img src="https://latex.codecogs.com/gif.latex?Error&space;=&space;f_{H_{2}\rightarrow&space;output}(f_{H_{1}\rightarrow&space;H_{2}}(f_{input\rightarrow&space;H_{1}}(Input)))" title="Error = f_{H_{2}\rightarrow output}(f_{H_{1}\rightarrow H_{2}}(f_{input\rightarrow H_{1}}(Input)))" /></a>  
 Therefore, what we can do to minimize the error?  
-As we all know, **the partial derivative (or gradient) on certain variable reflects how sensitive the output to the variation of the certain variable.**
-Then, the P.D. of the above equation is:  
-[]  
-
-reflects how  Can we directly do the derivative to the above P.D.E. and find the solution <a href="https://www.codecogs.com/eqnedit.php?latex=W_{input\rightarrow&space;H1},&space;W_{H1\rightarrow&space;H2},&space;W_{H2\rightarrow&space;output}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?W_{input\rightarrow&space;H1},&space;W_{H1\rightarrow&space;H2},&space;W_{H2\rightarrow&space;output}" title="W_{input\rightarrow H1}, W_{H1\rightarrow H2}, W_{H2\rightarrow output}" /></a>
-(since we cannot change our input matrix)?  
-Regardless of the computational difficulty, the answer is still **NO**. Because ever though each step we only do the linearly calculation,  
-the process is nested, not parallelled. One step derivative is easy to fall into the pitfall of local minimization.   
-
-   
+As we all know, **the partial derivative (or gradient) on certain variable reflects how sensitive the output to the variation of the certain variable.**  
+Can we directly do the partial derivative to the above equation and find the solution <a href="https://www.codecogs.com/eqnedit.php?latex=W_{input\rightarrow&space;H1},&space;W_{H1\rightarrow&space;H2},&space;W_{H2\rightarrow&space;output}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?W_{input\rightarrow&space;H1},&space;W_{H1\rightarrow&space;H2},&space;W_{H2\rightarrow&space;output}" title="W_{input\rightarrow H1}, W_{H1\rightarrow H2}, W_{H2\rightarrow output}" /></a>
+(since we cannot change our input matrix)? **Yes**, but the normal method to solve the P.D.E. is easy to fall into the pitfall of local minimization.  
+To avoid the pitfall, we will do the P.D. layer by layer by using chain rule, with the direction of backward propagation.       
 ## **Backward propagation**  
-AAA       
+Cut the crap, let's see how it works from <a href="https://www.codecogs.com/eqnedit.php?latex=output\rightarrow&space;H_{2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?output\rightarrow&space;H_{2}" title="output\rightarrow H_{2}" /></a>:  
+<a href="https://www.codecogs.com/eqnedit.php?latex=\left\{\begin{matrix}&space;\frac{\partial&space;Error}{\partial&space;W_{H_{2}\rightarrow&space;output}}=\frac{\partial&space;Error}{\partial&space;a_{output}}\cdot&space;\frac{\partial&space;a_{output}}{\partial&space;W_{H_{2}\rightarrow&space;output}}\\&space;\frac{\partial&space;Error}{\partial&space;a_{output}}=\frac{1}{2}\frac{\sum&space;(label-h_{output})^{2}}{\partial&space;a_{output}}=-{g}'(a_{output})(label-h_{output})\\&space;\frac{\partial&space;a_{output}}{\partial&space;W_{H_{2}\rightarrow&space;output}}=h_{H_{2}},a_{output}=W_{H_{2}\rightarrow&space;output}\cdot&space;h_{H_{2}}\\&space;\end{matrix}\right." target="_blank"><img src="https://latex.codecogs.com/gif.latex?\left\{\begin{matrix}&space;\frac{\partial&space;Error}{\partial&space;W_{H_{2}\rightarrow&space;output}}=\frac{\partial&space;Error}{\partial&space;a_{output}}\cdot&space;\frac{\partial&space;a_{output}}{\partial&space;W_{H_{2}\rightarrow&space;output}}\\&space;\frac{\partial&space;Error}{\partial&space;a_{output}}=\frac{1}{2}\frac{\sum&space;(label-h_{output})^{2}}{\partial&space;a_{output}}=-{g}'(a_{output})(label-h_{output})\\&space;\frac{\partial&space;a_{output}}{\partial&space;W_{H_{2}\rightarrow&space;output}}=h_{H_{2}},a_{output}=W_{H_{2}\rightarrow&space;output}\cdot&space;h_{H_{2}}\\&space;\end{matrix}\right." title="\left\{\begin{matrix} \frac{\partial Error}{\partial W_{H_{2}\rightarrow output}}=\frac{\partial Error}{\partial a_{output}}\cdot \frac{\partial a_{output}}{\partial W_{H_{2}\rightarrow output}}\\ \frac{\partial Error}{\partial a_{output}}=\frac{1}{2}\frac{\sum (label-h_{output})^{2}}{\partial a_{output}}=-{g}'(a_{output})(label-h_{output})\\ \frac{\partial a_{output}}{\partial W_{H_{2}\rightarrow output}}=h_{H_{2}},a_{output}=W_{H_{2}\rightarrow output}\cdot h_{H_{2}}\\ \end{matrix}\right." /></a>  
+  
+       
